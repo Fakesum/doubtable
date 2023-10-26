@@ -23,7 +23,7 @@ Then to run this to start the website at localhost:5000
 python doubtable
 ```
 
-then go to your browser of choice(example: chrome) and go to the site: (http://localhost:5000)[http://localhost:5000]
+then go to your browser of choice(example: chrome) and go to the site: [localhost:5000](http://localhost:5000)
 this is the link to any localy hosted website.
 
 ## TODO

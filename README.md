@@ -33,12 +33,11 @@ this is the link to any localy hosted website.
     - [ ] Make a Logo
     - [ ] Write a explination on the main body as to what the website is about and what it does
     - [ ] Make it look better by adding more styling
-        - [ ] Add Borders on everything 
         - [ ] some css tricks to make it look like certain divs are floting.
     - [ ] Add a Blured Background Image for the Page
 * Functionality
     - [ ] Add Sources to scrape answers from:
-        - [ ] Toppr.answers
+        - [x] Toppr.answers
         - [ ] Brainly.in
     - [ ] Optimize Selenium Base For this task
         - [ ] Use a pool of ephimereal proxies in case ip ban.

@@ -3,16 +3,16 @@ import flask
 import time
 from website import Header, WebSiteItem, Body
 import website.htbuilder as h
-from .scraper import get_from_toppr
+from scraper import get_from_toppr
 
-from seleniumbase import SB, BsaeCase
+from seleniumbase import SB, BaseCase
 
 app = flask.Flask(__name__)
 
 DEBUG_MODE = True
 
 _sb = SB(uc=True, headed=DEBUG_MODE, headless=(not DEBUG_MODE))
-DRIVER = _sb.__enter__()
+DRIVER: BaseCase = _sb.__enter__()
 
 class Html(WebSiteItem):
     def __init__(self, results= None) -> None:
@@ -77,8 +77,6 @@ def main():
 @app.route("/search")
 @timeit
 def search():
-    get_from_toppr(dict(flask.request.args)["search"])
-    
-    return flask.redirect("/")
+    return flask.render_template_string(Html(get_from_toppr(DRIVER, dict(flask.request.args)["search"])).render())
 
 app.run()

@@ -7,7 +7,11 @@ class Body(WebSiteItem):
         self.results = results
     
     def render_results(self):
+        if self.results == None:
+            return ""
+        
         return h.div(
+            *[h.div(item, _class="border border-primary") for item in self.results],
             _class="container p-3"
         )
     

@@ -5,8 +5,6 @@ import requests, time
 from concurrent.futures import ThreadPoolExecutor
 
 def get_from_toppr(driver: BaseCase, query, *, max=None):
-    inner_driver: NativeDriver = driver.driver
-
     def get_solution_from_url(url):
         soup = BeautifulSoup(requests.get(url).text)
         t = soup.select_one(".text_answerContainer__8YrSf")

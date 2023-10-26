@@ -1,0 +1,4 @@
+seleniumbase
+flask
+flask-ngrok
+more_itertools

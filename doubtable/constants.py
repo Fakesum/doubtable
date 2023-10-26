@@ -1,1 +1,0 @@
-LOGO = '''<svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>''' #TODO: Replace this with the real svg of the logo.

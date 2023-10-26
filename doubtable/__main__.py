@@ -3,8 +3,16 @@ import flask
 import time
 from website import Header, WebSiteItem, Body
 import website.htbuilder as h
+from .scraper import get_from_toppr
+
+from seleniumbase import SB, BsaeCase
 
 app = flask.Flask(__name__)
+
+DEBUG_MODE = True
+
+_sb = SB(uc=True, headed=DEBUG_MODE, headless=(not DEBUG_MODE))
+DRIVER = _sb.__enter__()
 
 class Html(WebSiteItem):
     def __init__(self, results= None) -> None:
@@ -28,6 +36,10 @@ class Html(WebSiteItem):
                 crossorigin="anonymous"
             ),
 
+            h.link(
+                href="static/css/style.css"
+            ),
+
             # JS
             h.script(
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
@@ -36,7 +48,6 @@ class Html(WebSiteItem):
             )
         )
 
-    
     def body(self):
         return h.body(
             Header("static/svg/logo.svg", [{"name": "Home", "link": "/"}, {"name": "Place Holder", "link": "/"}]).render(),
@@ -66,8 +77,8 @@ def main():
 @app.route("/search")
 @timeit
 def search():
-    search = dict(flask.request.args)["search"]
-    print("Searched: ", search)
-    return flask.redirect("/") #TODO: GIve a sepreate rendered pages with results. Like Html(results=...).render()
+    get_from_toppr(dict(flask.request.args)["search"])
+    
+    return flask.redirect("/")
 
 app.run()

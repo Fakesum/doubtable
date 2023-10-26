@@ -2,3 +2,4 @@ seleniumbase
 flask
 flask-ngrok
 more_itertools
+bs4

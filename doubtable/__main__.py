@@ -9,7 +9,7 @@ from seleniumbase import SB, BaseCase
 
 app = flask.Flask(__name__)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 _sb = SB(uc=True, headed=DEBUG_MODE, headless=(not DEBUG_MODE))
 DRIVER: BaseCase = _sb.__enter__()
@@ -28,7 +28,7 @@ class Html(WebSiteItem):
         return h.head(
             # Import Bootstrap Styling.
 
-            # Css
+            # Bootstrap Css
             h.link(
                 href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
                 rel="stylesheet",
@@ -40,11 +40,19 @@ class Html(WebSiteItem):
                 href="static/css/style.css"
             ),
 
-            # JS
+            # BootStrap JS
             h.script(
                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
                 integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL",
                 crossorigin="anonymous"
+            ),
+
+            # Math Jax
+            h.script(
+                type="text/javascript",
+                id="MathJax-script",
+                _async="",
+                src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
             )
         )
 
@@ -76,5 +84,13 @@ def main():
         return flask.render_template_string(Html(get_from_toppr(DRIVER, dict(flask.request.args)["search"])).render())
     else:
         return flask.render_template_string(Html().render())
+
+if not DEBUG_MODE:
+    import flask.cli
+    import logging
+    
+    flask.cli.show_server_banner = lambda *args: None
+    app.logger.disabled = True
+    logging.getLogger("werkzeug").disabled = True
 
 app.run()

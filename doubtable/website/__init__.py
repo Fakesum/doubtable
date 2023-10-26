@@ -3,3 +3,4 @@ class WebSiteItem:
         raise NotImplementedError
 
 from .header import Header
+from .body import Body

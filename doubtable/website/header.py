@@ -1,4 +1,4 @@
-from ..import htbuilder as h
+from .import htbuilder as h
 from . import WebSiteItem
 
 class Header(WebSiteItem):
@@ -19,7 +19,7 @@ class Header(WebSiteItem):
     
     def get_menu(self):
         return h.ul(
-            *[h.li(h.a(item["name"], _class="nav-link px-2 text-secondary", href=item["link"])) for item in self.menu_items],
+            *[h.li(h.a(item["name"], _class="nav-link px-2 "+("text-secondary" if item == self.menu_items[0] else "text-white"), href=item["link"])) for item in self.menu_items],
             _class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
         )
     

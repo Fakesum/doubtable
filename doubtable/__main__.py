@@ -1,12 +1,15 @@
 import flask
 # import flask_ngrok
-import htbuilder as h
 import time
-from .website import Header, WebSiteItem
+from website import Header, WebSiteItem, Body
+import website.htbuilder as h
 
 app = flask.Flask(__name__)
 
 class Html(WebSiteItem):
+    def __init__(self, results= None) -> None:
+        self.results = results
+    
     def head(self):
         """Constructor for the <head> of the html, includes link to 
         Css of Bootstrap and Js of Bootstrap.
@@ -34,33 +37,17 @@ class Html(WebSiteItem):
         )
 
     
-    def main(self):
-        return h.div(
-            h.div(
-                h.div(
-                    "Search Result Here",
-                    _class="col-sm"
-                ),
-                h.div(
-                    self.get_search(),
-                    _class="col-sm bg-warning p-3"
-                ),
-                _class="row"
-            ),
-            _class="container"
-        )
-    
-    def body(self, results):
+    def body(self):
         return h.body(
-            Header("static/svg/logo.svg").render(),
-            self.main(results)
+            Header("static/svg/logo.svg", [{"name": "Home", "link": "/"}, {"name": "Place Holder", "link": "/"}]).render(),
+            Body(self.results).render()
         )
 
-    def render(self, results=None):
-        return str(h.html(
+    def render(self):
+        return h.html(
             self.head(),
-            self.body(results)
-        ))
+            self.body()
+        ).__str__()
 
 def timeit(f):
     def wrapper(*args, **kwargs):
@@ -68,6 +55,8 @@ def timeit(f):
         res = f(*args, **kwargs)
         print(round(time.time() - st, 3)*(10**3), "ms")
         return res
+    wrapper.__name__ = f.__name__
+    return wrapper
 
 @app.route("/")
 @timeit
@@ -78,6 +67,7 @@ def main():
 @timeit
 def search():
     search = dict(flask.request.args)["search"]
-    return flask.render_template()
+    print("Searched: ", search)
+    return flask.redirect("/") #TODO: GIve a sepreate rendered pages with results. Like Html(results=...).render()
 
 app.run()

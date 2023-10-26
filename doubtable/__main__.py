@@ -11,6 +11,8 @@ app = flask.Flask(__name__)
 
 DEBUG_MODE = False
 
+print("Started Initialization")
+
 _sb = SB(uc=True, headed=DEBUG_MODE, headless=(not DEBUG_MODE))
 DRIVER: BaseCase = _sb.__enter__()
 
@@ -72,7 +74,7 @@ def timeit(f):
     def wrapper(*args, **kwargs):
         st = time.time()
         res = f(*args, **kwargs)
-        print(round(time.time() - st), "Seconds")
+        print(round((time.time() - st)*(10**3), 5), "ms")
         return res
     wrapper.__name__ = f.__name__
     return wrapper
@@ -93,4 +95,6 @@ if not DEBUG_MODE:
     app.logger.disabled = True
     logging.getLogger("werkzeug").disabled = True
 
+print("Started Server at localhost:5000, ngrok to make it accessable from other devices.")
 app.run()
+print("Stoped Server.")

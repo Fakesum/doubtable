@@ -42,3 +42,6 @@ this is the link to any localy hosted website.
     - [ ] Optimize Selenium Base For this task
         - [ ] Use a pool of ephimereal proxies in case ip ban.
         - [ ] Create a genereal scraper which can scrape from a variety of sites using the same code(This can be done by simply putting the entire page as text then making it so that the text is read through the find the portion which is considered the answer automatically.)
+
+#### PS
+The Code is left public on purpose.

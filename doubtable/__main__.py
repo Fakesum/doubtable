@@ -64,7 +64,7 @@ def timeit(f):
     def wrapper(*args, **kwargs):
         st = time.time()
         res = f(*args, **kwargs)
-        print(round(time.time() - st, 3)*(10**3), "ms")
+        print(round(time.time() - st), "Seconds")
         return res
     wrapper.__name__ = f.__name__
     return wrapper
@@ -72,11 +72,9 @@ def timeit(f):
 @app.route("/")
 @timeit
 def main():
-    return flask.render_template_string(Html().render())
-
-@app.route("/search")
-@timeit
-def search():
-    return flask.render_template_string(Html(get_from_toppr(DRIVER, dict(flask.request.args)["search"])).render())
+    if "search" in flask.request.args:
+        return flask.render_template_string(Html(get_from_toppr(DRIVER, dict(flask.request.args)["search"])).render())
+    else:
+        return flask.render_template_string(Html().render())
 
 app.run()

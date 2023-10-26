@@ -33,7 +33,7 @@ class Header(WebSiteItem):
                 name="search"
             ),
             _class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3",
-            action="/search",
+            action="/",
             method="get"
         )
     

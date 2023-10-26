@@ -167,7 +167,7 @@ class HtmlElement(object):
 def _clean_name(k):
     # This allows you to use reserved words by prepending/appending underscores.
     # For example, "_class" instead of "class".
-    return k.strip("_").replace("_", "-").replace("58", ":")
+    return k.strip("_").replace("_", "-").replace("58", ":") # Arbitrary Modification just so that svg can work
 
 
 def fragment(*args):

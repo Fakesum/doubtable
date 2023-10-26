@@ -1,8 +1,25 @@
+'''
+author: Fakesum/Ansh Mathur 12-b
+date: 2023.10.26
+github: https://github.com/Fakesum/doubtables
+'''
+
 from .import htbuilder as h
 from . import WebSiteItem
 
 class Header(WebSiteItem):
+    """The Header Utility Class, it will returned the rendered navbar/header
+
+    Derived:
+        WebSiteItem : Only for type hinting.
+    """
     def __init__(self, logo_path, menu_items) -> None:
+        """Constructor for Header Utility Class
+
+        Args:
+            logo_path (str): The url path to the logo, Should be a url path to a svg
+            menu_items (list[dict[str, str]]): The list of menu items in the format, {name: ..., link: ...}
+        """
         self.logo_path = logo_path
         self.menu_items = menu_items
     

@@ -1,5 +1,10 @@
+'''
+author: Fakesum/Ansh Mathur 12-b
+date: 2023.10.26
+github: https://github.com/Fakesum/doubtables
+'''
+
 from seleniumbase import BaseCase, SB
-from selenium.webdriver import Chrome as NativeDriver
 from bs4 import BeautifulSoup
 import requests, time
 from concurrent.futures import ThreadPoolExecutor

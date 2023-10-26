@@ -30,7 +30,12 @@ The website module holds all the html code in a pythonic way,
 This is so that the code is legable and modifiable in python
 without having to modify strings manually
 """
-from website import Header, WebSiteItem, Body
+from website import (
+    Header,
+    WebSiteItem,
+    Body,
+    Footer
+)
 
 """
 This is a external Library which has been slightly modified.
@@ -52,6 +57,9 @@ from seleniumbase import SB, BaseCase
 
 #Standard Imports
 import time
+import threading
+import pathlib
+import os
 
 # Start the flask app
 app = flask.Flask(__name__)
@@ -76,13 +84,13 @@ class Html(WebSiteItem):
     Derived:
         WebSiteItem (_type_): Just for typing hinting ignore.
     """
-    def __init__(self, results= None) -> None:
+    def __init__(self, proc_id=None) -> None:
         """Constructor for Html Utility Class
 
         Args:
             results (list[str], optional): The results of the search conducted by scraper. Defaults to None.
         """
-        self.results = results
+        self.proc_id = proc_id
     
     def head(self):
         """Constructor for the <head> of the html, includes link to 
@@ -119,6 +127,12 @@ class Html(WebSiteItem):
                 id="MathJax-script",
                 _async="",
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
+            ),
+
+            # Javascript for the search
+            h.script(
+                open("static/js/search.js").read(),
+                type="text/javascript"
             )
         )
 
@@ -136,7 +150,11 @@ class Html(WebSiteItem):
 
             # This is the main portion/body of the page.
             # the results for any searches are rendered here.
-            Body(self.results).render()
+            Body(self.proc_id).render(),
+
+            # The Footer motly just includes some useful links
+            # And an MIT license notice
+            Footer().render()
         )
 
     def render(self):
@@ -169,6 +187,8 @@ def timeit(f):
 
     return wrapper
 
+_SIG = {}
+
 @app.route("/")
 @timeit
 def main():
@@ -179,10 +199,20 @@ def main():
     """
 
     if "search" in flask.request.args:
-        # If something has been searched then return the searched results
-        return flask.render_template_string(Html(get_from_toppr(DRIVER, dict(flask.request.args)["search"])).render())
+        process_id = hash(dict(flask.request.args)["search"].__str__())
+        
+        threading.Thread(target=lambda: get_from_toppr(DRIVER, dict(flask.request.args)["search"], process_id), daemon=True).start()
+        _SIG[process_id] = None
+
+        return flask.render_template_string(Html(process_id).render())
     else:
         return flask.render_template_string(Html().render())
+
+@app.route("/pollsearch", methods=["POST"])
+def search():
+    _SIG[flask.request.json["id"]] += f'--{flask.request.json["id"]}--' + flask.request.json["data"]
+
+    return flask.render_template_string("done")
 
 if not DEBUG_MODE:
     # This just disables the flask priting 
@@ -195,6 +225,6 @@ if not DEBUG_MODE:
     app.logger.disabled = True
     logging.getLogger("werkzeug").disabled = True
 
-print("Started Server at localhost:5000, ngrok to make it accessable from other devices.")
+print("Started Server at localhost:5000, use flask_ngrok to make it accessable from other devices.")
 app.run()
 print("Stoped Server.")

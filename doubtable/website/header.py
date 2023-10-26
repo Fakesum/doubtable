@@ -24,6 +24,11 @@ class Header(WebSiteItem):
         self.menu_items = menu_items
     
     def get_logo(self):
+        """Utility Function to get the logo
+
+        Returns:
+            html: Html of the logo image.
+        """
         return h.a(
             h.img(
                 src=self.logo_path,
@@ -35,12 +40,22 @@ class Header(WebSiteItem):
         )
     
     def get_menu(self):
+        """Return the html of the menu in the navbar.
+
+        Returns:
+            Html: Html of the menu in the navbar.
+        """
         return h.ul(
             *[h.li(h.a(item["name"], _class="nav-link px-2 "+("text-secondary" if item == self.menu_items[0] else "text-white"), href=item["link"])) for item in self.menu_items],
             _class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
         )
     
     def get_search(self):
+        """return the html of the search bar.
+
+        Returns:
+            html: html of the search bar(form)
+        """
         return h.form(
             h.input(
                 type="search",
@@ -55,6 +70,11 @@ class Header(WebSiteItem):
         )
     
     def render(self):
+        """The Main Render function for the header navbar.
+
+        Returns:
+            html: html of the header/navbar.
+        """
         return h.header(
             h.div(
                 h.div(

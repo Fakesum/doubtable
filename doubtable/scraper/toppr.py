@@ -9,15 +9,18 @@ from bs4 import BeautifulSoup
 import requests, time
 from concurrent.futures import ThreadPoolExecutor
 
-def get_from_toppr(driver: BaseCase, query, *, max=None):
+def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
     def get_solution_from_url(url):
         soup = BeautifulSoup(requests.get(url).text)
         t = soup.select_one(".text_answerContainer__8YrSf")
-        if t != None:
-            return t.__str__()
-        else:
+
+        if t == None:
             t = soup.select_one(".Solution_html__KkUW2")
-            return t.__str__()
+        
+        requests.post("http://127.0.0.1:5000/pollsearch", json={
+            "id": proc_id,
+            "data":t.__str__()
+        })
 
 
     driver.get("https://www.google.com/search?q="+query+r"+site%3Atoppr.com%2Fask%2Fquestion")

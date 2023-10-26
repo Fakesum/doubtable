@@ -12,11 +12,19 @@ This will create a folder called doubtable with the code inside.
 
 <br>
 
-To start the website run: 
+First to Install the requirements run(This only has to be done once.):
 ```bash
 pip install -r requirements.txt
+```
+
+Then to run this to start the website at localhost:5000
+
+```bash
 python doubtable
 ```
+
+then go to your browser of choice(example: chrome) and go to the site: (http://localhost:5000)[http://localhost:5000]
+this is the link to any localy hosted website.
 
 ## TODO
 

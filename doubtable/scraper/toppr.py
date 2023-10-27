@@ -17,11 +17,10 @@ def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
         if t == None:
             t = soup.select_one(".Solution_html__KkUW2")
         
-        requests.post("http://127.0.0.1:5000/pollsearch", json={
+        requests.post("http://127.0.0.1:5000/commitsearch", json={
             "id": proc_id,
             "data":t.__str__()
-        })
-
+        }, timeout=60)
 
     driver.get("https://www.google.com/search?q="+query+r"+site%3Atoppr.com%2Fask%2Fquestion")
     i_urls = driver.execute_script('var result = [];document.querySelectorAll(`[jsname="UWckNb"]`).forEach(res => {result.push(res.href)}); return result')

@@ -58,17 +58,17 @@ from seleniumbase import SB, BaseCase
 #Standard Imports
 import time
 import threading
-import pathlib
-import os
+import json
 
 # Start the flask app
 app = flask.Flask(__name__)
 
-"""
-Debug Mode determines whether the flask commandline output
-and the chrome window for scraping will show up or not.
-"""
+# Start with ngrok
+# warning this needs ngrok to be setup.
+# flask_ngrok.run_with_ngrok(app)
+
 DEBUG_MODE = False
+DISABLE_LOGGING = False
 
 print("Started Initialization")
 
@@ -111,7 +111,8 @@ class Html(WebSiteItem):
             ),
 
             h.link(
-                href="static/css/style.css"
+                href="static/css/style.css",
+                rel="stylesheet"
             ),
 
             # BootStrap JS
@@ -129,11 +130,16 @@ class Html(WebSiteItem):
                 src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
             ),
 
-            # Javascript for the search
             h.script(
-                open("static/js/search.js").read(),
+                f"SESSION_ID=`{self.proc_id}`;", # This is the session id.
                 type="text/javascript"
-            )
+            ),
+
+            # Javascript for the search
+            (h.script(
+                src="static/js/search.js",
+                type="text/javascript"
+            ) if self.proc_id != None else "")
         )
 
     def body(self):
@@ -187,7 +193,8 @@ def timeit(f):
 
     return wrapper
 
-_SIG = {}
+# Dict to keep track of sessions currently in progress
+_SIP = {}
 
 @app.route("/")
 @timeit
@@ -199,22 +206,49 @@ def main():
     """
 
     if "search" in flask.request.args:
-        process_id = hash(dict(flask.request.args)["search"].__str__())
+        search_args = dict(flask.request.args)["search"]
+        process_id = str(hash(search_args.__str__()))
         
-        threading.Thread(target=lambda: get_from_toppr(DRIVER, dict(flask.request.args)["search"], process_id), daemon=True).start()
-        _SIG[process_id] = None
+        _SIP[process_id] = {
+            "proc":threading.Thread(target=lambda: get_from_toppr(DRIVER, search_args, process_id), daemon=True),
+            "flow":[]
+        }
+        _SIP[process_id]["proc"].start()
 
         return flask.render_template_string(Html(process_id).render())
     else:
         return flask.render_template_string(Html().render())
 
-@app.route("/pollsearch", methods=["POST"])
+#TODO: [URGENT] re-Add order
+#TODO: Add Question above the answer.
+@app.route("/pollsearch", methods=["GET"])
 def search():
-    _SIG[flask.request.json["id"]] += f'--{flask.request.json["id"]}--' + flask.request.json["data"]
+    r_id = flask.request.args["id"]
+
+    Session = _SIP[r_id]
+    flow = f'--{r_id}--'.join(Session["flow"] + (["true"] if Session["proc"].is_alive() else ["false"]))
+    _SIP[r_id]["flow"] = [] # Clear Flow
+    
+    if not Session["proc"].is_alive():
+        del _SIP[r_id]
+    
+    return flow, 200
+
+@app.route("/commitsearch", methods=["POST"])
+def add_search():
+    _SIP[flask.request.json["id"]]["flow"].append(
+        str(
+            h.div(
+                flask.request.json["data"],
+                _class="border border-primary",
+                style="background-color: #ebeef2"
+            )
+        )
+    )
 
     return flask.render_template_string("done")
 
-if not DEBUG_MODE:
+if DISABLE_LOGGING:
     # This just disables the flask priting 
     # to the comnmandline
 

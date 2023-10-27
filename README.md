@@ -29,19 +29,19 @@ this is the link to any localy hosted website.
 ## TODO
 
 * Styling
-    - [x] Make a Basic Header
-    - [ ] Make a Logo
-    - [ ] Write a explination on the main body as to what the website is about and what it does
+    - [ ] Add a description for the website(both a small one in the footer and one in the body)
     - [ ] Make it look better by adding more styling
         - [ ] some css tricks to make it look like certain divs are floting.
-    - [ ] Add a Blured Background Image for the Page
+    - [ ] Add a Css animation to play in the background of the page.
 * Functionality
     - [ ] Add Sources to scrape answers from:
-        - [x] Toppr.answers
         - [ ] Brainly.in
-    - [ ] Optimize Selenium Base For this task
-        - [ ] Use a pool of ephimereal proxies in case ip ban.
-        - [ ] Create a genereal scraper which can scrape from a variety of sites using the same code(This can be done by simply putting the entire page as text then making it so that the text is read through the find the portion which is considered the answer automatically.)
+* Current
+    - [ ] Re-add Order to search(It has been removed tempararily because of the recent addition of dynamic loading, the order can be very easily added back in, it just needs some additional data be passed to the javascript which will be done later.)
+    
+    - [ ] Add Questions above toppr(Also remove Solution Verified by toppr section above it.)
+    - [ ] Add Parameters for the search.
+    - [ ] Add a option to get the type and subject of question which have been inputed(optional, otherwise can be used with chatgpt4 to detect which one.)
 
 #### PS
 The Code is left public on purpose.

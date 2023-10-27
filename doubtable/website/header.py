@@ -56,6 +56,8 @@ class Header(WebSiteItem):
         Returns:
             html: html of the search bar(form)
         """
+        #TODO: Add Parameters,
+        #TODO: Get the type of question.
         return h.form(
             h.input(
                 type="search",

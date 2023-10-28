@@ -67,7 +67,7 @@ app = flask.Flask(__name__)
 # warning this needs ngrok to be setup.
 # flask_ngrok.run_with_ngrok(app)
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 DISABLE_LOGGING = False
 
 print("Started Initialization")
@@ -219,7 +219,6 @@ def main():
     else:
         return flask.render_template_string(Html().render())
 
-#TODO: [URGENT] re-Add order
 #TODO: Add Question above the answer.
 @app.route("/pollsearch", methods=["GET"])
 def search():
@@ -240,8 +239,10 @@ def add_search():
         str(
             h.div(
                 flask.request.json["data"],
+                id="__rbox",
                 _class="border border-primary",
-                style="background-color: #ebeef2"
+                style="background-color: #ebeef2",
+                priority=str(flask.request.json["priority"])
             )
         )
     )

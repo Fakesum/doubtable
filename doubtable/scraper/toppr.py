@@ -10,7 +10,8 @@ import requests, time
 from concurrent.futures import ThreadPoolExecutor
 
 def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
-    def get_solution_from_url(url):
+    def get_solution_from_url(args):
+        url, priority = args
         soup = BeautifulSoup(requests.get(url).text)
         t = soup.select_one(".text_answerContainer__8YrSf")
 
@@ -19,7 +20,8 @@ def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
         
         requests.post("http://127.0.0.1:5000/commitsearch", json={
             "id": proc_id,
-            "data":t.__str__()
+            "data":t.__str__(),
+            "priority": priority
         }, timeout=60)
 
     driver.get("https://www.google.com/search?q="+query+r"+site%3Atoppr.com%2Fask%2Fquestion")
@@ -29,7 +31,7 @@ def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
         i_urls = i_urls[0:max]
     
     with ThreadPoolExecutor(max_workers=25) as exc:
-        results = list(exc.map(get_solution_from_url, i_urls))
+        results = list(exc.map(get_solution_from_url, list(zip(i_urls, list(range(1, len(i_urls)+1))))))
     
     return results
 

@@ -37,8 +37,6 @@ this is the link to any localy hosted website.
     - [ ] Add Sources to scrape answers from:
         - [ ] Brainly.in
 * Current
-    - [ ] Re-add Order to search(It has been removed tempararily because of the recent addition of dynamic loading, the order can be very easily added back in, it just needs some additional data be passed to the javascript which will be done later.)
-    
     - [ ] Add Questions above toppr(Also remove Solution Verified by toppr section above it.)
     - [ ] Add Parameters for the search.
     - [ ] Add a option to get the type and subject of question which have been inputed(optional, otherwise can be used with chatgpt4 to detect which one.)

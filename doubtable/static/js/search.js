@@ -9,8 +9,27 @@ setInterval(() => {
                 }else if (elm == "true"){
                     return;
                 };
-                
-                document.querySelector(".results-container").innerHTML += elm;
+
+                BREAK = false;
+
+                const parser = new DOMParser();
+                elm = parser.parseFromString(elm, "text/html").querySelector("#__rbox")
+
+                document.querySelectorAll("#__rbox").forEach(
+                    res => {
+                        if (!BREAK){
+                            if (parseInt(res.getAttribute("priority")) > parseInt(elm.getAttribute("priority"))){
+                                res.parentElement.insertBefore(elm, res)
+                                BREAK = true;
+                            }
+                        }
+                    }
+                );
+
+                // This should only occur for the last element.
+                if (!BREAK){
+                    document.querySelector(".results-container").appendChild(elm)
+                }
             })
         });
     }

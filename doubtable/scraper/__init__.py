@@ -31,11 +31,19 @@ def _commit_search(proc_id, priority, data):
         "priority": priority
     }, timeout=60)
 
+def _commit_summary(proc_id, text):
+    requests.post("http://127.0.0.1:5000/commitsummary", json={
+        "id": proc_id,
+        "data": text
+    }, timeout=60)
+
 from .toppr import get_from_toppr
+from .byjus import get_from_byjus
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
     processes.append(get_from_toppr(driver, search_args, process_id, weight=0))
+    processes.append(get_from_byjus(driver, search_args, process_id, weight=75))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

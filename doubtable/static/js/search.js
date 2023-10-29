@@ -1,10 +1,12 @@
-CONTINUE = true;
+CONTINUE_SEARCH_POLL = true;
+CONTINUE_SUMMARY_POLL = true;
+
 setInterval(() => {
-    if (CONTINUE){
+    if (CONTINUE_SEARCH_POLL){
         fetch("/pollsearch?id="+SESSION_ID).then(r => {return r.text()}).then(r => {
             r.split("--"+SESSION_ID+"--").forEach(elm => {
-                if ((elm == "false") || (CONTINUE == false)){
-                    CONTINUE = false;
+                if ((elm == "false") || (CONTINUE_SEARCH_POLL == false)){
+                    CONTINUE_SEARCH_POLL = false;
                     return;
                 }else if (elm == "true"){
                     return;
@@ -32,5 +34,17 @@ setInterval(() => {
                 }
             })
         });
+    };
+    if (CONTINUE_SUMMARY_POLL){
+        fetch("/pollsummary?id="+SESSION_ID)
+            .then(r => {r.text()})
+            .then(summary => {
+                if (summary == "none"){
+                    return
+                } else {
+                    document.querySelector('.summary-container').textContent = summary;
+                    CONTINUE_SUMMARY_POLL = false
+                }
+            })
     }
 }, 1000)

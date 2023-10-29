@@ -19,6 +19,10 @@ class Body(WebSiteItem):
                 ),
                 h.div(
                     Header.get_search(self),
+                    h.div(
+                        ("what is Good About doubtable" if self.proc_id == None else "Loading Here"),
+                        _class="container summary-container"
+                    ),
                     _class="col-sm p-3"
                 ),
                 _class="row"

@@ -24,7 +24,7 @@ has to be displayed for the presentation.
 it also requires a special api key which will be provided
 by me(Ansh Mathur 12-b)
 """
-import flask_ngrok
+from pyngrok import ngrok
 
 """
 The website module holds all the html code in a pythonic way,
@@ -63,9 +63,6 @@ import threading
 # Start the flask app
 app = flask.Flask(__name__)
 
-# Start with ngrok
-# warning this needs ngrok to be setup.
-flask_ngrok.run_with_ngrok(app)
 
 DEBUG_MODE = False
 DISABLE_LOGGING = False
@@ -205,30 +202,48 @@ def main():
         flask.render: The rendered html from Html Class
     """
 
+    # If they have searched something.
     if "search" in flask.request.args:
+
+        # This is term which was searched.
         search_args = dict(flask.request.args)["search"]
+
+        # This is the session id. it is generated through a 
+        # hash so that is the same for the search.
         process_id = str(hash(search_args.__str__()))
         
         _SIP[process_id] = {
             "proc":threading.Thread(target=lambda: scrape_from_sources(DRIVER, search_args, process_id), daemon=True),
-            "flow":[]
+            "flow":[],
+            "summary": "none"
         }
         _SIP[process_id]["proc"].start()
 
-        return flask.render_template_string(Html(process_id).render())
+        return Html(process_id).render(), 200
+    
+    # if nothing was searched then just send the normal page.
     else:
-        return flask.render_template_string(Html().render())
+        return Html().render(), 200
 
 #TODO: Add Question above the answer.
 @app.route("/pollsearch", methods=["GET"])
 def search():
+    """When a search has been made, the javascript will get this endpoint at set intervals to 
+    Check whether the something new has been scraped which will be displayed
+
+    Returns:
+        flask.render: the flow.
+    """
     r_id = flask.request.args["id"]
 
     Session = _SIP[r_id]
+
     flow = f'--{r_id}--'.join(Session["flow"] + (["true"] if Session["proc"].is_alive() else ["false"]))
     _SIP[r_id]["flow"] = [] # Clear Flow
     
     if not Session["proc"].is_alive():
+        # if the process is dead then there is no reason to 
+        # continue to store this..
         del _SIP[r_id]
     
     return flow, 200
@@ -253,7 +268,21 @@ def add_search():
         )
     )
 
-    return flask.render_template_string("done")
+    return "done", 200
+
+@app.route("/commitsummary", methods=["POST"])
+def add_summary():
+    _SIP[flask.request.json["id"]]["summary"] = flask.request.json["data"]
+
+    return "done", 200
+
+@app.route("/pollsummary")
+def summary():
+    r_id = flask.request.args["id"]
+
+    summary = _SIP[r_id]["summary"]
+
+    return summary, 200
 
 if DISABLE_LOGGING:
     # This just disables the flask priting 
@@ -266,6 +295,9 @@ if DISABLE_LOGGING:
     app.logger.disabled = True
     logging.getLogger("werkzeug").disabled = True
 
-print("Started Server at localhost:5000, use flask_ngrok to make it accessable from other devices.")
+print("Started Server at localhost:5000")
+# ngrok.set_auth_token("2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2")
+# ngrok_url = ngrok.connect(5000)
+# print("* Ngrok Url: ", ngrok_url)
 app.run()
 print("Stoped Server.")

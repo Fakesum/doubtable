@@ -34,8 +34,16 @@ this is the link to any localy hosted website.
         - [ ] some css tricks to make it look like certain divs are floting.
     - [ ] Add a Css animation to play in the background of the page.
 * Functionality
-    - [ ] Add Sources to scrape answers from:
-        - [ ] Brainly.in
+    - [ ] List of Sources:
+        - [x] Toppr.answer
+        - [ ] learnCBSE.com
+        - [ ] Byjus
+        - [ ] sarthaks.com
+        - [ ] mathway (for math questions only)
+        - [ ] dougtnut
+        - [ ] vedantu
+    - [ ] Summary
+        - [ ] ChatGpt
 * Current
     - [ ] Add Questions above toppr(Also remove Solution Verified by toppr section above it.)
     - [ ] Add Parameters for the search.

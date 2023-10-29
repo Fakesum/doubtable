@@ -296,8 +296,8 @@ if DISABLE_LOGGING:
     logging.getLogger("werkzeug").disabled = True
 
 print("Started Server at localhost:5000")
-# ngrok.set_auth_token("2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2")
-# ngrok_url = ngrok.connect(5000)
-# print("* Ngrok Url: ", ngrok_url)
+ngrok.set_auth_token("2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2")
+ngrok_url = ngrok.connect(5000)
+print("* Ngrok Url: ", ngrok_url)
 app.run()
 print("Stoped Server.")

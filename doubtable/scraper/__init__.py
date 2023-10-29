@@ -32,14 +32,10 @@ def _commit_search(proc_id, priority, data):
     }, timeout=60)
 
 from .toppr import get_from_toppr
-from .brainly_in import get_from_brainly
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
     processes.append(get_from_toppr(driver, search_args, process_id, weight=0))
-
-    # Will be below most toppr, and be done after toppr is done being scraped.
-    processes.append(get_from_brainly(driver, search_args, process_id, weight=25))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

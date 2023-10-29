@@ -5,7 +5,8 @@ github: https://github.com/Fakesum/doubtables
 '''
 
 """
-Flask, This is what is used to host the code.
+Flask is a Very basic python website backend which handles all
+the requests, it is what is used to be able to host the website.
 """
 import flask
 
@@ -23,7 +24,7 @@ has to be displayed for the presentation.
 it also requires a special api key which will be provided
 by me(Ansh Mathur 12-b)
 """
-# import flask_ngrok
+import flask_ngrok
 
 """
 The website module holds all the html code in a pythonic way,
@@ -58,16 +59,15 @@ from seleniumbase import SB, BaseCase
 #Standard Imports
 import time
 import threading
-import json
 
 # Start the flask app
 app = flask.Flask(__name__)
 
 # Start with ngrok
 # warning this needs ngrok to be setup.
-# flask_ngrok.run_with_ngrok(app)
+flask_ngrok.run_with_ngrok(app)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 DISABLE_LOGGING = False
 
 print("Started Initialization")

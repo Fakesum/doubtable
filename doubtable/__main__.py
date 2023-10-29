@@ -47,7 +47,7 @@ the scraper module holds all the code required
 for scraping sites like toppr, brainly, and more
 and getting the data in a usuable form.
 """
-from scraper import get_from_toppr
+from scraper import scrape_from_sources
 
 """
 Selenium base is a external library used here in order
@@ -210,7 +210,7 @@ def main():
         process_id = str(hash(search_args.__str__()))
         
         _SIP[process_id] = {
-            "proc":threading.Thread(target=lambda: get_from_toppr(DRIVER, search_args, process_id), daemon=True),
+            "proc":threading.Thread(target=lambda: scrape_from_sources(DRIVER, search_args, process_id), daemon=True),
             "flow":[]
         }
         _SIP[process_id]["proc"].start()
@@ -238,9 +238,15 @@ def add_search():
     _SIP[flask.request.json["id"]]["flow"].append(
         str(
             h.div(
-                flask.request.json["data"],
+                h.div(
+                    flask.request.json["data"]["question"],
+                    _class="border border-danger border-3",
+                    style="background-color: ##fdffcc"
+                ),
+
+                flask.request.json["data"]["answer"],
                 id="__rbox",
-                _class="border border-primary",
+                _class="border border-3 border-primary border-end-0",
                 style="background-color: #ebeef2",
                 priority=str(flask.request.json["priority"])
             )

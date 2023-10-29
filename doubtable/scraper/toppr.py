@@ -4,39 +4,24 @@ date: 2023.10.26
 github: https://github.com/Fakesum/doubtables
 '''
 
-from seleniumbase import BaseCase, SB
 from bs4 import BeautifulSoup
-import requests, time
-from concurrent.futures import ThreadPoolExecutor
+import requests
+from . import _scrape_google, _commit_search, _compare
 
-def get_from_toppr(driver: BaseCase, query, proc_id, *, max=None):
-    def get_solution_from_url(args):
-        url, priority = args
-        soup = BeautifulSoup(requests.get(url).text)
-        t = soup.select_one(".text_answerContainer__8YrSf")
+@_scrape_google(r"site%3Atoppr.com%2Fask%2Fquestion")
+def get_from_toppr(args):
+    url, priority, proc_id, weight, query = args
+    priority += weight
 
-        if t == None:
-            t = soup.select_one(".Solution_html__KkUW2")
-        
-        requests.post("http://127.0.0.1:5000/commitsearch", json={
-            "id": proc_id,
-            "data":t.__str__(),
-            "priority": priority
-        }, timeout=60)
+    soup = BeautifulSoup(requests.get(url).text)
+    t = soup.select_one(".text_answerContainer__8YrSf")
 
-    driver.get("https://www.google.com/search?q="+query+r"+site%3Atoppr.com%2Fask%2Fquestion")
-    i_urls = driver.execute_script('var result = [];document.querySelectorAll(`[jsname="UWckNb"]`).forEach(res => {result.push(res.href)}); return result')
-
-    if (max != None) and (len(i_urls) > max):
-        i_urls = i_urls[0:max]
+    if t == None:
+        t = soup.select_one(".Solution_html__KkUW2")
     
-    with ThreadPoolExecutor(max_workers=25) as exc:
-        results = list(exc.map(get_solution_from_url, list(zip(i_urls, list(range(1, len(i_urls)+1))))))
+    q = soup.select_one(".text_questionContent__XI147")
     
-    return results
-
-if __name__ == "__main__":
-    with SB(uc=True, headed=True, headless=False) as driver:
-        st = time.time()
-        print(get_from_toppr(driver, "what is the integration of cos^-1", max=10))
-        print((time.time() - st)*1000)
+    _commit_search(proc_id, int(priority)-(_compare(query, q.get_text())), {
+        "question": q.__str__(),
+        "answer": t.__str__()
+    })

@@ -45,9 +45,13 @@ this is the link to any localy hosted website.
     - [ ] Summary
         - [ ] ChatGpt
 * Current
-    - [ ] Add Questions above toppr(Also remove Solution Verified by toppr section above it.)
     - [ ] Add Parameters for the search.
-    - [ ] Add a option to get the type and subject of question which have been inputed(optional, otherwise can be used with chatgpt4 to detect which one.)
+    - [ ] Add a option to get the type and subject of question which have been inputed(optional, otherwise can be used with chatgpt to detect which one.)
+
+* General
+- [ ] Write about what is good about doubtable.
+- [ ] Write about how is it better than simply googling (otherwise suggest features in either the discord or whatsapp, features which would make it better.)
+- [ ] 
 
 #### PS
 The Code is left public on purpose.

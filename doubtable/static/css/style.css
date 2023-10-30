@@ -661,3 +661,44 @@ img {
     max-width: 100% !important;
     height: auto !important;
 }
+
+body {
+	background: linear-gradient(-45deg, #ffbe0a, #c23847, #2a7fb4, #5b4e99);
+	background-size: 400% 400%;
+	animation: bg_gradient 10s ease infinite;
+	min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes bg_gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+#__rbox {
+    font-size: 24px;
+    padding: 2rem 1rem;
+    min-height: 3em;
+    resize: both;
+    background: white;
+    border-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cstyle%3Epath%7Banimation:stroke 5s infinite linear%3B%7D%40keyframes stroke%7Bto%7Bstroke-dashoffset:776%3B%7D%7D%3C/style%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%235b4e99' /%3E%3Cstop offset='25%25' stop-color='%23c23670' /%3E%3Cstop offset='50%25' stop-color='%23db8b3e' /%3E%3Cstop offset='100%25' stop-color='%23e2c36d' /%3E%3C/linearGradient%3E %3Cpath d='M1.5 1.5 l97 0l0 97l-97 0 l0 -97' stroke-linecap='square' stroke='url(%23g)' stroke-width='3' stroke-dasharray='388'/%3E %3C/svg%3E") 1;
+    border-radius: 100px;
+    border-width: 100px;
+
+}
+
+/* .container {
+    background: white;
+} */
+
+footer{
+    margin-top: auto;
+}

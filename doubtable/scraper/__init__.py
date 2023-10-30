@@ -44,8 +44,8 @@ from .learnCBSE import get_from_learnCBSE
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
     processes.append(get_from_toppr(driver, search_args, process_id, weight=0))
-    processes.append(get_from_byjus(driver, search_args, process_id, weight=30))
-    processes.append(get_from_learnCBSE(driver, search_args, process_id, weight=50))
+    # processes.append(get_from_byjus(driver, search_args, process_id, weight=0))
+    # processes.append(get_from_learnCBSE(driver, search_args, process_id, weight=0))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

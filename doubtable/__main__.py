@@ -263,11 +263,10 @@ def add_search():
                     _class="border border-danger border-3",
                     style="background-color: ##fdffcc"
                 ),
-
+                
                 flask.request.json["data"]["answer"],
+                
                 id="__rbox",
-                _class="border border-3 border-primary border-end-0",
-                style="background-color: #ebeef2",
                 priority=str(flask.request.json["priority"])
             )
         )

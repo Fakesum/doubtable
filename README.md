@@ -26,6 +26,10 @@ python doubtable
 then go to your browser of choice(example: chrome) and go to the site: [localhost:5000](http://localhost:5000)
 this is the link to any localy hosted website.
 
+## Requirements
+
+Ngrok Must be installed.
+
 ## TODO
 
 * Styling
@@ -37,7 +41,7 @@ this is the link to any localy hosted website.
     - [ ] List of Sources:
         - [x] Toppr.answer
         - [ ] learnCBSE.com
-        - [ ] Byjus
+        - [x] Byjus
         - [ ] sarthaks.com
         - [ ] mathway (for math questions only)
         - [ ] dougtnut

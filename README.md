@@ -40,7 +40,7 @@ Ngrok Must be installed.
 * Functionality
     - [ ] List of Sources:
         - [x] Toppr.answer
-        - [ ] learnCBSE.com
+        - [x] learnCBSE.com
         - [x] Byjus
         - [ ] sarthaks.com
         - [ ] mathway (for math questions only)

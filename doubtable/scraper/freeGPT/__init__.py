@@ -15,13 +15,12 @@ import os
 
 class KeysExhausted(Exception): pass
 
-def _make_api_call(url, host, data, key_file, type="get", exhaustion_error = KeysExhausted):
-    keys = open(os.path.join(pathlib.Path(__file__).parent.absolute().__str__(), key_file), "r").readlines()
+def _make_api_call(url, host, data, key_file, r_type="get", exhaustion_error = KeysExhausted):
+    keys = open(os.path.join(pathlib.Path(__file__).parent.absolute().__str__(), key_file), "r").read().split("\n")
     key = random.choice(keys)
-
     while True:
         try:
-            if type == "get":
+            if r_type == "get":
                 res = requests.get(
                     url,
                     headers={
@@ -41,9 +40,14 @@ def _make_api_call(url, host, data, key_file, type="get", exhaustion_error = Key
                     },
                     json=data
                 )
-            assert res.status_code == 200
+            assert res.ok
             return res.json()
-        except:
+        except Exception as e:
+            try:
+                print(res.text)
+            except:
+                pass
+            print("Error: ", e, type(e))
             keys.remove(key)
             if len(keys) != 0:
                 key = random.choice(keys)
@@ -58,4 +62,4 @@ def _split_into_paragraph(text, threshold=200):
         else:
             out.append(chunk+'.')
     
-    return "\n\n".join(out)
+    return "<br/><br/>".join(out)

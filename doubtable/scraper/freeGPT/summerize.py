@@ -29,6 +29,6 @@ sumerize_from_text = lambda text, length, lang: _make_api_call(
         "lang": lang
     },
     "summerize.keys",
-    type="post",
+    r_type="post",
     exhaustion_error=SummerizeKeysExhausted
 )

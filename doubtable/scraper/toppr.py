@@ -11,7 +11,6 @@ from . import _scrape_google, _commit_search, _compare
 @_scrape_google(r"site%3Atoppr.com%2Fask%2Fquestion")
 def get_from_toppr(args):
     url, priority, proc_id, weight, query = args
-    priority += weight
 
     soup = BeautifulSoup(requests.get(url).text)
     t = soup.select_one(".text_answerContainer__8YrSf")
@@ -21,7 +20,7 @@ def get_from_toppr(args):
     
     q = soup.select_one(".text_questionContent__XI147")
     
-    _commit_search(proc_id, int(priority)-(_compare(query, q.get_text())), {
+    _commit_search(proc_id, ((int(priority)*10)+weight)-(_compare(query, q.get_text())), {
         "question": q.__str__(),
         "answer": t.__str__()
     })

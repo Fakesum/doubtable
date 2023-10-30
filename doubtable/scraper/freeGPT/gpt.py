@@ -18,11 +18,11 @@ def request(content):
         "chatgpt-api8.p.rapidapi.com",
         content,
         "gpt.keys",
-        type="post",
+        r_type="post",
         exhaustion_error=GPTApiKeysExhausted
     )
 
-def get_answer(query, source, o_length ="short", itype="url", summary_length=50, lang="en"):
+def get_answer(query, source, itype="url", summary_length=50, lang="en"):
     """Get the answer of a question with given source to pull the answer from.
 
     Args:
@@ -36,26 +36,25 @@ def get_answer(query, source, o_length ="short", itype="url", summary_length=50,
         lang (str, optional): the language of the output. Defaults to "en".
 
     """
-    summary_length = max((summary_length, 50)) # length can be max 50 sentences.
+    summary_length = min((summary_length, 50)) # length can be max 50 sentences.
 
     if itype == "url":
-        summary = sumerize_from_url(source, summary_length, lang)["summary"]
+        summary = sumerize_from_url(source, summary_length, lang)["summary"].replace("\n\n", " ").replace("\n", " ")
     elif itype == "text":
-        summary = sumerize_from_text(source, summary_length, lang)["summary"]
+        summary = sumerize_from_text(source, summary_length, lang)["summary"].replace("\n\n", " ").replace("\n", " ")
     
-    pretext = ""
-    if o_length == "short":
-        pretext = "only give the steps(in case of mathematical equation) and basic answer."
-    
-    return _split_into_paragraph(request(
+    res = request(
         [
             {
-                "content":f"""{pretext}answer with data from the summary: '{summary}'""",
-                "user": "system"
+                "content":f"""answer from summary: '{summary}'""",
+                "role": "system"
             },
             {
                 "content": query,
-                "user": "user"
+                "role": "user"
             }
-        ],
-    )["text"])
+        ]
+    )
+    print(res)
+    
+    return _split_into_paragraph(res["text"])

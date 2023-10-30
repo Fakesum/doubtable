@@ -8,11 +8,11 @@ def _compare(t1, t2):
 
 def _scrape_google(search):
     def decorator(f):
-        def wrapper(driver: BaseCase, query, proc_id, *, max=None, weight=0):
+        def wrapper(driver: BaseCase, query: str, proc_id, _max=None, weight=0):
             driver.get("https://www.google.com/search?q="+query+"+"+search)
             i_urls = driver.execute_script('var result = [];document.querySelectorAll(`[jsname="UWckNb"]`).forEach(res => {result.push(res.href)}); return result')
 
-            if (max != None) and (len(i_urls) > max):
+            if (_max != None) and (len(i_urls) > max):
                 i_urls = i_urls[0:max]
             
             return [f, list(zip(i_urls, list(range(1, len(i_urls)+1)), [proc_id]*(len(i_urls)), [weight]*(len(i_urls)), [query]*(len(i_urls)) ))]
@@ -39,11 +39,13 @@ def _commit_summary(proc_id, text):
 
 from .toppr import get_from_toppr
 from .byjus import get_from_byjus
+from .learnCBSE import get_from_learnCBSE
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
     processes.append(get_from_toppr(driver, search_args, process_id, weight=0))
-    processes.append(get_from_byjus(driver, search_args, process_id, weight=75))
+    processes.append(get_from_byjus(driver, search_args, process_id, weight=30))
+    processes.append(get_from_learnCBSE(driver, search_args, process_id, weight=50))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

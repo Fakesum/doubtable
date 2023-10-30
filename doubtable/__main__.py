@@ -24,7 +24,7 @@ has to be displayed for the presentation.
 it also requires a special api key which will be provided
 by me(Ansh Mathur 12-b)
 """
-from pyngrok import ngrok
+import subprocess
 
 """
 The website module holds all the html code in a pythonic way,
@@ -59,6 +59,7 @@ from seleniumbase import SB, BaseCase
 #Standard Imports
 import time
 import threading
+import os
 
 # Start the flask app
 app = flask.Flask(__name__)
@@ -236,6 +237,10 @@ def search():
     """
     r_id = flask.request.args["id"]
 
+    if not (r_id in _SIP):
+        return "false", 200 # stop polling if r_id has been deleted.
+
+
     Session = _SIP[r_id]
 
     flow = f'--{r_id}--'.join(Session["flow"] + (["true"] if Session["proc"].is_alive() else ["false"]))
@@ -296,8 +301,8 @@ if DISABLE_LOGGING:
     logging.getLogger("werkzeug").disabled = True
 
 print("Started Server at localhost:5000")
-ngrok.set_auth_token("2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2")
-ngrok_url = ngrok.connect(5000)
-print("* Ngrok Url: ", ngrok_url)
+os.system("ngrok authtoken '2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2'")
+ngrok_proc = subprocess.Popen(["ngrok", "http", "--domain=beloved-charmed-stork.ngrok-free.app", "--log=stdout", "--log-level=crit", "5000"])
+print("* Ngrok Started at: http://beloved-charmed-stork.ngrok-free.app")
 app.run()
 print("Stoped Server.")

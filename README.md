@@ -42,7 +42,7 @@ Ngrok Must be installed.
         - [x] Toppr.answer
         - [x] learnCBSE.com
         - [x] Byjus
-        - [ ] sarthaks.com
+        - [ ] sarthaks.com(Dosen't seem to be working at the moment.)
         - [ ] mathway (for math questions only)
         - [ ] dougtnut
         - [ ] vedantu
@@ -56,6 +56,29 @@ Ngrok Must be installed.
 - [ ] Write about what is good about doubtable.
 - [ ] Write about how is it better than simply googling (otherwise suggest features in either the discord or whatsapp, features which would make it better.)
 - [ ] 
+
+## The big questions (Hints for the presentation)
+
+These are a list of the biggest questions we are most likely to be asked during the presentation, these are some of the resources
+to try and answer them (note to utkarsh 12 b), please write the below answers in your own words and add them to the power point.
+
+* Why not just use the sites which are scraped from:
+    1) Because ours is better, the sites in question often have large issues.(Basically add a little bit of slander about other sites which we are scraping from to make this project look better.)
+        * toppr often doesn't load properly
+        * brainly has paid restrictions
+        * sarthaks has technical issues with their site.
+        * mathway is for math questions only and it doesn't defrentiate between the the most 
+        Commonly asked method of solving and the rest.
+
+        * etc
+    
+    2) Because the explinations are better.
+        * make a point of how we use ai technolegy to get a good and relevant summary of the pages scraped depending on the question asked.
+
+* Why not just use google
+    1) Because for every useful site you will find 10 which are not relevant, incorrect or otherwise not a good answer to the question given
+
+    2) Because google simply provides the links and if the quesiton is of the obscure variety then it will take a long time to go through all the searches and get a result.
 
 #### PS
 The Code is left public on purpose.

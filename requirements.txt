@@ -3,3 +3,4 @@ flask
 more_itertools
 bs4
 g4f
+blingfire

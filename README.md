@@ -42,12 +42,10 @@ Ngrok Must be installed.
         - [x] Toppr.answer
         - [x] learnCBSE.com
         - [x] Byjus
-        - [ ] sarthaks.com(Dosen't seem to be working at the moment.)
-        - [ ] mathway (for math questions only)
-        - [ ] dougtnut
-        - [ ] vedantu
-    - [ ] Summary
-        - [ ] ChatGpt
+        - [x] sarthaks.com
+        - [ ] mathway (for math questions only)(Least Priority)
+        - [x] dougtnut
+        - [x] vedantu
 * Current
     - [ ] Add Parameters for the search.
     - [ ] Add a option to get the type and subject of question which have been inputed(optional, otherwise can be used with chatgpt to detect which one.)

@@ -36,10 +36,11 @@ class Footer(WebSiteItem):
                     h.div(
                         h.div(
                             h.div(
-                                "MIT License",
+                                "© MIT License  Github Link: ",
                                 h.a(
+                                    "https://github.com/Fakesum/doubtable",
                                     _class="text-white",
-                                    href="https://github.com/Fakesum/doubtables"
+                                    href="https://github.com/Fakesum/doubtable",
                                 ),
                                 _class="p-3"
                             ),

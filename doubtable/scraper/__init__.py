@@ -2,12 +2,15 @@ from concurrent.futures import ThreadPoolExecutor
 from difflib import SequenceMatcher
 from seleniumbase import BaseCase
 import requests
+import types
+
+USE_GPT_SUMMARY = True
 
 def _compare(t1, t2):
     return round(SequenceMatcher(t1, t2).ratio()*100, 2)
 
-def _scrape_google(search):
-    def decorator(f):
+def _scrape_google(search, source_name):
+    def decorator(f: types.FunctionType):
         def wrapper(driver: BaseCase, query: str, proc_id, _max=None, weight=0):
             driver.get("https://www.google.com/search?q="+query+"+"+search)
             i_urls = driver.execute_script('var result = [];document.querySelectorAll(`[jsname="UWckNb"]`).forEach(res => {result.push(res.href)}); return result')
@@ -15,7 +18,7 @@ def _scrape_google(search):
             if (_max != None) and (len(i_urls) > max):
                 i_urls = i_urls[0:max]
             
-            return [f, list(zip(i_urls, list(range(1, len(i_urls)+1)), [proc_id]*(len(i_urls)), [weight]*(len(i_urls)), [query]*(len(i_urls)) ))]
+            return [f, list(zip(i_urls, list(range(1, len(i_urls)+1)), [proc_id]*(len(i_urls)), [weight]*(len(i_urls)), [query]*(len(i_urls)), [source_name]*(len(i_urls)) ))]
         return wrapper
     return decorator
 
@@ -37,15 +40,25 @@ def _commit_summary(proc_id, text):
         "data": text
     }, timeout=60)
 
-from .toppr import get_from_toppr
-from .byjus import get_from_byjus
-from .learnCBSE import get_from_learnCBSE
+from .toppr import get as Toppr
+from .byjus import get as Byjus
+from .learnCBSE import get as LearnCBSE
+from .vedantu import get as Vendantu
+from .doubtnut import get as Doubtnut
+from .sarthaks import get as Sarthaks
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
-    processes.append(get_from_toppr(driver, search_args, process_id, weight=0))
-    # processes.append(get_from_byjus(driver, search_args, process_id, weight=0))
-    # processes.append(get_from_learnCBSE(driver, search_args, process_id, weight=0))
+    # processes.append(Toppr(driver, search_args, process_id))
+
+    # These two are limited
+    if USE_GPT_SUMMARY:
+        processes.append(Byjus(driver, search_args, process_id))
+        processes.append(LearnCBSE(driver, search_args, process_id))
+
+    # processes.append(Vendantu(driver, search_args, process_id))
+    # processes.append(Sarthaks(driver, search_args, process_id))
+    # processes.append(Doubtnut(driver, search_args, process_id))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

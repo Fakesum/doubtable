@@ -259,12 +259,11 @@ def add_search():
         str(
             h.div(
                 h.div(
-                    flask.request.json["data"]["question"],
-                    _class="border border-danger border-3",
-                    style="background-color: ##fdffcc"
+                    flask.request.json["data"]["question"]
                 ),
                 
                 flask.request.json["data"]["answer"],
+                "by " + flask.request.json["data"]["source"],
                 
                 id="__rbox",
                 priority=str(flask.request.json["priority"])
@@ -303,5 +302,9 @@ print("Started Server at localhost:5000")
 os.system("ngrok authtoken '2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2'")
 ngrok_proc = subprocess.Popen(["ngrok", "http", "--domain=beloved-charmed-stork.ngrok-free.app", "--log=stdout", "--log-level=crit", "5000"])
 print("* Ngrok Started at: http://beloved-charmed-stork.ngrok-free.app")
-app.run()
-print("Stoped Server.")
+
+from contextlib import suppress
+
+with suppress(KeyboardInterrupt):
+    app.run()
+    print("Stoped Server.")

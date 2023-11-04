@@ -8,11 +8,11 @@ from bs4 import BeautifulSoup
 import requests
 from . import _scrape_google, _commit_search, _compare
 
-@_scrape_google(r"site%3Atoppr.com%2Fask%2Fquestion")
-def get_from_toppr(args):
-    url, priority, proc_id, weight, query = args
+@_scrape_google(r"site%3Atoppr.com%2Fask%2Fquestion", "toppr.answr")
+def get(args):
+    url, priority, proc_id, weight, query, source = args
 
-    soup = BeautifulSoup(requests.get(url).text)
+    soup = BeautifulSoup(requests.get(url).text, features="lxml")
     t = soup.select_one(".text_answerContainer__8YrSf")
 
     if t == None:
@@ -22,5 +22,6 @@ def get_from_toppr(args):
     
     _commit_search(proc_id, ((int(priority)*10)+weight)-(_compare(query, q.get_text())), {
         "question": q.__str__(),
-        "answer": t.__str__()
+        "answer": t.__str__(),
+        "source": source
     })

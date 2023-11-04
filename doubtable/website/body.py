@@ -12,7 +12,7 @@ class Body(WebSiteItem):
             h.div(
                 h.div(
                     h.div(
-                        ("Info Here" if self.proc_id == None else "Loading Here"),
+                        (h.div("Info Here", id="__rbox") if self.proc_id == None else "Loading Here"),
                         _class="container p-3 results-container"
                     ),
                     _class="col-sm"

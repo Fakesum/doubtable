@@ -45,36 +45,22 @@ from .byjus import get as Byjus
 from .learnCBSE import get as LearnCBSE
 from .vedantu import get as Vendantu
 from .doubtnut import get as Doubtnut
-from .sarthaks import get as Sarthaks
-from .gpt import gpt_request
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
 
     processes.append(Toppr(driver, search_args, process_id))
+    processes.append(Vendantu(driver, search_args, process_id))
+    processes.append(Doubtnut(driver, search_args, process_id))
 
     # These two are limited
     if USE_GPT_SUMMARY:
         processes.append(Byjus(driver, search_args, process_id))
         processes.append(LearnCBSE(driver, search_args, process_id))
 
-    processes.append(Vendantu(driver, search_args, process_id))
-    processes.append(Sarthaks(driver, search_args, process_id))
-    processes.append(Doubtnut(driver, search_args, process_id))
-
-    def summary():
-        res = gpt_request({
-            "messages": [
-                {
-                    "role": "user",
-                    "content": "Give a detailed answer of the question: " + search_args[-2]
-                }
-            ]
-        })["choices"]["0"]["message"]["content"]
-        
-        _commit_summary(process_id, res)
-
     with ThreadPoolExecutor(max_workers=25) as exc:
-        exc.submit(summary)
+        futures = []
         for p in processes:
-            list(exc.map(*p))
+            futures.append(exc.map(*p))
+        
+        [list(future) for future in futures]

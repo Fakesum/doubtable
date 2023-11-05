@@ -7,7 +7,7 @@ github: https://github.com/Fakesum/doubtables
 from bs4 import BeautifulSoup
 import requests
 from . import _scrape_google, _commit_search, _compare
-from .gpt import gpt_request
+from .gpt import ChatgptMainThread
 
 
 @_scrape_google(r"site%3Abyjus.com", "byjus")
@@ -15,7 +15,7 @@ def get(args):
     url, priority, proc_id, weight, query, source = args
 
     soup = BeautifulSoup(requests.get(url).text, features="lxml")
-    t = gpt_request({
+    t = ChatgptMainThread._gpt_request({
         "message": [
             {
                 "role": "system",

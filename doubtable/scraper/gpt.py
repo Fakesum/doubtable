@@ -1,26 +1,28 @@
-import requests
+import pathlib
+import os
 import random
-import time
+import requests
 
-def gpt_request(content: dict):
-    req_id = random.randint(10**10, 10**11)
-
-    requests.post(
-        "http://127.0.0.1:5000/internal/chatgpt/request",
-        json={
-            "id": req_id,
-            "data": content
-        }
-    )
-
-    while True:
-        time.sleep(0.5)
-        res = requests.post(
-            "http://127.0.0.1:5000/internal/chatgpt/poll",
-            json={
-                "id": req_id
-            }
-        )
+class ChatgptMainThread:
+    KEYS_FILE = os.path.join(pathlib.Path(__file__).parent.absolute().__str__(), "gpt.keys")
+    
+    @staticmethod
+    def _gpt_request(content: dict):
+        keys = open(ChatgptMainThread.KEYS_FILE).read().split("\n")
+        key = random.choice(keys)
         
-        if res.text != "none":
-            return res.json()
+        while True:
+            try:
+                res = requests.post(
+                    "https://chatgpt53.p.rapidapi.com/", 
+                    headers={
+                        'content-type': 'application/json',
+                        'X-RapidAPI-Key': key,
+                        'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+                    }, json=content, timeout=60
+                )
+                assert res.status_code == 200
+                return res.json()
+            
+            except Exception as e:
+                key = random.choice(keys)

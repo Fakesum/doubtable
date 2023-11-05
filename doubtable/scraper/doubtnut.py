@@ -7,6 +7,7 @@ github: https://github.com/Fakesum/doubtables
 from bs4 import BeautifulSoup
 import requests
 from . import _scrape_google, _commit_search, _compare
+import random
 
 @_scrape_google(r"site%3Adoubtnut.com", "doubtnut")
 def get(args):
@@ -14,15 +15,14 @@ def get(args):
 
     soup = BeautifulSoup(requests.get(url).text, features="lxml")
     t = soup.select_one('#solution-text > .text-base > .overflow-y-hidden')
-    q = soup.select_one("#ocr-text")
-
-    try:
-        t.get_text()
-        q.get_text()
-    except:
-        return
+    if t == None:
+        t = soup.select_one("[class*=PcmbQuestionsStyles__answerHeadDiv-]")
     
-    _commit_search(proc_id, ((int(priority)*10)+weight)-(_compare(query, q.get_text())), {
+    q = soup.select_one("#ocr-text")
+    if q == None:
+        q = soup.select_one("[class*=PcmbQuestionsStyles__questionHeadDiv-]")
+    
+    _commit_search(proc_id, ((int(priority)*10)+weight), {
         "question": q.__str__(),
         "answer": t.get_text(),
         "source": source

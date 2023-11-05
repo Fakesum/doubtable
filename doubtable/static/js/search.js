@@ -38,7 +38,7 @@ setInterval(() => {
     };
     if (CONTINUE_SUMMARY_POLL){
         fetch("/pollsummary?id="+SESSION_ID)
-            .then(r => {r.text()})
+            .then(r => {console.log(r);return r.text()})
             .then(summary => {
                 if ((summary == "none") || summary == undefined){
                     return

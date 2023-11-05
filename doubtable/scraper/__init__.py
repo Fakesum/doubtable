@@ -4,7 +4,7 @@ from seleniumbase import BaseCase
 import requests
 import types
 
-USE_GPT_SUMMARY = True
+USE_GPT_SUMMARY = False
 
 def _compare(t1, t2):
     return round(SequenceMatcher(t1, t2).ratio()*100, 2)
@@ -49,16 +49,16 @@ from .sarthaks import get as Sarthaks
 
 def scrape_from_sources(driver: BaseCase, search_args: str, process_id: str):
     processes = []
-    # processes.append(Toppr(driver, search_args, process_id))
+    processes.append(Toppr(driver, search_args, process_id))
 
     # These two are limited
     if USE_GPT_SUMMARY:
         processes.append(Byjus(driver, search_args, process_id))
         processes.append(LearnCBSE(driver, search_args, process_id))
 
-    # processes.append(Vendantu(driver, search_args, process_id))
-    # processes.append(Sarthaks(driver, search_args, process_id))
-    # processes.append(Doubtnut(driver, search_args, process_id))
+    processes.append(Vendantu(driver, search_args, process_id))
+    processes.append(Sarthaks(driver, search_args, process_id))
+    processes.append(Doubtnut(driver, search_args, process_id))
 
     with ThreadPoolExecutor(max_workers=25) as exc:
         for p in processes:

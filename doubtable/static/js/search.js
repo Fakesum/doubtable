@@ -22,6 +22,7 @@ setInterval(() => {
                         if (!BREAK){
                             if (parseInt(res.getAttribute("priority")) > parseInt(elm.getAttribute("priority"))){
                                 res.parentElement.insertBefore(elm, res)
+                                try{document.querySelector(".spinner-box").remove()}catch{};
                                 BREAK = true;
                             }
                         }
@@ -39,7 +40,7 @@ setInterval(() => {
         fetch("/pollsummary?id="+SESSION_ID)
             .then(r => {r.text()})
             .then(summary => {
-                if (summary == "none"){
+                if ((summary == "none") || summary == undefined){
                     return
                 } else {
                     document.querySelector('.summary-container').textContent = summary;

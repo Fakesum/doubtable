@@ -60,6 +60,9 @@ from seleniumbase import SB, BaseCase
 import time
 import threading
 import os
+import random
+import pathlib
+import requests
 
 # Start the flask app
 app = flask.Flask(__name__)
@@ -284,6 +287,7 @@ def summary():
     r_id = flask.request.args["id"]
 
     summary = _SIP[r_id]["summary"]
+    print(summary)
 
     return summary, 200
 
@@ -297,6 +301,62 @@ if DISABLE_LOGGING:
     flask.cli.show_server_banner = lambda *args: None
     app.logger.disabled = True
     logging.getLogger("werkzeug").disabled = True
+
+CHATGPT_PENDING = {}
+CHATGPT_DONE = {}
+
+class ChatgptMainThread(threading.Thread):
+    KEYS_FILE = os.path.join(pathlib.Path(__file__).parent.absolute().__str__(), "gpt.keys")
+
+    def __init__(self) -> None:
+        super().__init__(daemon=True)
+    
+    def run(self):
+        global CHATGPT_DONE, CHATGPT_PENDING
+        while True:
+            pending_ids = []
+            for pending in CHATGPT_PENDING.keys():
+                pending_ids.append(pending)
+                CHATGPT_DONE.update({pending: self._gpt_request(CHATGPT_PENDING[pending])})
+            
+            # This is to avoid deleting ids which where inputed while the loop was running.
+            for pending in pending_ids:
+                del CHATGPT_PENDING[pending]
+
+    def _gpt_request(self, content: dict):    
+        keys = open(self.KEYS_FILE).read().split("\n")
+        key = random.choice(keys)
+        
+        while True:
+            try:
+                res = requests.post(
+                    "https://chatgpt53.p.rapidapi.com/", 
+                    headers={
+                        'content-type': 'application/json',
+                        'X-RapidAPI-Key': key,
+                        'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+                    }, json=content, timeout=60
+                )
+                assert res.status_code == 200
+                return res.json()
+            
+            except AssertionError:
+                key = random.choice(keys)
+
+ChatgptMainThread().start()
+
+@app.route("/internal/chatgpt/request", methods=["POST"])
+def chatgpt_request():
+    CHATGPT_PENDING.update({flask.request.json["id"]: dict(flask.request.json["data"])})
+    return "done", 200
+
+@app.route("/internal/chatgpt/poll", methods=["POST"])
+def chatgpt_poll():
+    if flask.request.json["id"] in CHATGPT_DONE:
+        res = str(CHATGPT_DONE[flask.request.json["id"]])
+        del CHATGPT_DONE[flask.request.json["id"]]
+        return res, 200
+    return "none", 200
 
 print("Started Server at localhost:5000")
 os.system("ngrok authtoken '2XRv8Isym9ahC9pRm0oa4o4OEPD_3TLvyCVD5B5VhMnE49Pn2'")

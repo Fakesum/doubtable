@@ -30,11 +30,7 @@ class Header(WebSiteItem):
             html: Html of the logo image.
         """
         return h.a(
-            h.img(
-                src=self.logo_path,
-                width="120",
-                height="100",
-            ),
+            ".",
             href="/",
             _class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
         )

@@ -152,9 +152,7 @@ class Html(WebSiteItem):
         """
         return h.body(
             # This is the navbar/header of the page.
-            #      ----this is the logo-- ----------------------------menu links-------------------------------
-            #      |                    | |                                                                    |
-            Header("static/svg/logo.svg", [{"name": "Home", "link": "/"}, {"name": "Place Holder", "link": "/"}]).render(),
+            Header("static/svg/logo.svg", [{"name": "Home", "link": "/"}]).render(),
 
             # This is the main portion/body of the page.
             # the results for any searches are rendered here.
@@ -236,7 +234,7 @@ def main():
         CHATGPT_PENDING.update({process_id: ReturingThread(lambda: ChatgptMainThread._gpt_request({ "messages": [
             {
                 "role": "system",
-                "content": "answer the question in as much detail as possible with refrence to multiple internet sites."
+                "content": "answer the question in about 100 words with refrence to multiple internet sites."
             },
             {
                 "role": "user",

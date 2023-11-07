@@ -174,6 +174,10 @@ class Html(WebSiteItem):
             self.body()
         ).__str__()
 
+class QuestionsHtml(WebSiteItem):
+    def render(self):
+        return super().render()
+
 def timeit(f):
     """This is a timing decorator for printing how much
     Time any function took
@@ -234,7 +238,7 @@ def main():
         CHATGPT_PENDING.update({process_id: ReturingThread(lambda: ChatgptMainThread._gpt_request({ "messages": [
             {
                 "role": "system",
-                "content": "answer the question in about 100 words with refrence to multiple internet sites."
+                "content": "answer the question in short"
             },
             {
                 "role": "user",
@@ -314,6 +318,24 @@ def summary():
     if CHATGPT_PENDING[r_id].result() == None:
         return "none", 220
     return CHATGPT_PENDING[r_id].result(), 200
+
+@app.route("/genquestions")
+def gen_question():
+    board, _class, topic = flask.request.args["q"].split(",")
+
+    ReturingThread(lambda: ChatgptMainThread._gpt_request({
+        "messages": [
+            {
+                "role": "user",
+                "content": f"ask a good question which is frequently asked in exams on the topic {topic} according to {board} board, for class {_class}"
+            },
+        ]
+    }))
+    return "done", 200
+
+@app.route("/pollquestions")
+def poll_question():
+    return "done", 200
 
 if DISABLE_LOGGING:
     # This just disables the flask priting 
